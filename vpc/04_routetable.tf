@@ -113,3 +113,15 @@ resource "aws_route_table_association" "ngw-c-attach" {
   depends_on = ["aws_nat_gateway.ngw-a"]
 }
 
+# VPC EndPoint S3
+resource "aws_vpc_endpoint" "vpc-endpoint-s3" {
+  vpc_id = "${aws_vpc.vpc.id}"
+  service_name = "com.amazonaws.${var.region}.s3"
+  route_table_ids = [
+    "${aws_route_table.public-rtb.id}",
+    "${aws_route_table.protected-a-rtb.id}",
+    "${aws_route_table.protected-c-rtb.id}"
+  ]
+  depends_on = ["aws_route_table.protected-c-rtb"]
+}
+
